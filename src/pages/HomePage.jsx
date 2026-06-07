@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { HERO, SIDEBAR_STORIES, LATEST, MORE_ROWS, CATEGORY_SECTIONS, GALLERY_ITEMS } from "../data/news";
 
@@ -140,7 +139,7 @@ function TextStoryRow({ story, index, light = false, numbered = false }) {
 // ── HERO ──────────────────────────────────────────────────────────────────────
 function HeroSection() {
   const left = SIDEBAR_STORIES.slice(0, 2);
-  const right = SIDEBAR_STORIES.slice(2, 4);
+  const right = SIDEBAR_STORIES.slice(2, 6);
 
   return (
     <section>
@@ -152,7 +151,7 @@ function HeroSection() {
               <img
                 src={getImg(s, i)}
                 alt={s.title}
-                className="w-full h-28 object-cover object-center mb-2"
+                className="w-full h-36 object-cover object-center mb-2"
                 loading="lazy"
                 onError={(e) => onErr(e, i)}
               />
@@ -165,7 +164,7 @@ function HeroSection() {
         </div>
 
         <div className="border-r border-gray-200">
-          <FeaturedCard story={HERO} index={0} large overlay />
+          <FeaturedCard story={HERO} index={0} large />
         </div>
 
         <div className="flex flex-col divide-y divide-gray-200">
@@ -187,7 +186,7 @@ function HeroSection() {
           <img
             src={getImg(HERO, 0)}
             alt={HERO.title}
-            className="w-full h-56 object-cover object-center"
+            className="w-full h-64 object-cover object-center"
             onError={(e) => onErr(e, 0)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
@@ -197,7 +196,7 @@ function HeroSection() {
           </div>
         </Link>
         <div className="px-4 sm:px-6 divide-y divide-gray-100">
-          {SIDEBAR_STORIES.slice(0, 4).map((s, i) => (
+          {SIDEBAR_STORIES.map((s, i) => (
             <StoryRow key={s.id} story={s} index={i + 1} />
           ))}
         </div>
@@ -206,21 +205,31 @@ function HeroSection() {
   );
 }
 
-// ── LATEST — 4 cards only ─────────────────────────────────────────────────────
+// ── LATEST ────────────────────────────────────────────────────────────────────
 function LatestSection({ stories }) {
   const top4 = stories.slice(0, 4);
+  const next8 = stories.slice(4, 12);
 
   return (
     <section>
       <SectionTitle title="Latest Stories" to="/politics" accent />
-      <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4">
+      {/* Top 4 cards */}
+      <div className="hidden lg:grid lg:grid-cols-4 lg:gap-3 mb-6">
         {top4.map((s, i) => (
           <FeaturedCard key={s.id} story={s} index={i} overlay />
         ))}
       </div>
+      {/* Next 8 as horizontal rows */}
+      {next8.length > 0 && (
+        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-x-8">
+          {next8.map((s, i) => (
+            <StoryRow key={s.id} story={s} index={i + 4} />
+          ))}
+        </div>
+      )}
       {/* Mobile */}
       <div className="lg:hidden divide-y divide-gray-100">
-        {top4.map((s, i) => (
+        {stories.slice(0, 8).map((s, i) => (
           <StoryRow key={s.id} story={s} index={i} />
         ))}
       </div>
@@ -228,21 +237,40 @@ function LatestSection({ stories }) {
   );
 }
 
-// ── EDITOR'S PICKS ────────────────────────────────────────────────────────────
+// ── MY NEWS ───────────────────────────────────────────────────────────────────
 function MyNewsSection({ stories = [] }) {
-  const items = stories.length ? stories : LATEST.slice(4, 8);
+  const items = stories.length ? stories : LATEST.slice(4, 12);
 
   return (
     <section style={{ backgroundColor: "#0a0a0a" }} className="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-10">
       <div className="max-w-screen-xl mx-auto">
         <SectionTitle title="Editor's Picks" to="/entertainment" light />
-        <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4">
+        <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4 mb-6">
           {items.slice(0, 4).map((s, i) => (
             <FeaturedCard key={s.id} story={s} index={i + 4} light overlay />
           ))}
         </div>
+        {items.slice(4, 8).length > 0 && (
+          <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4">
+            {items.slice(4, 8).map((s, i) => (
+              <Link key={s.id} to={`/article/${s.slug}`} className="group flex gap-3 items-start py-3 border-t border-zinc-800">
+                <img
+                  src={getImg(s, i + 8)}
+                  alt={s.title}
+                  className="w-16 h-12 object-cover object-center shrink-0"
+                  loading="lazy"
+                  onError={(e) => onErr(e, i + 8)}
+                />
+                <div className="flex-1 min-w-0">
+                  <h5 className="text-xs font-bold leading-snug text-white group-hover:underline line-clamp-3" style={f}>{s.title}</h5>
+                  <Meta time={s.time} light />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
         <div className="lg:hidden divide-y divide-zinc-800">
-          {items.slice(0, 4).map((s, i) => (
+          {items.slice(0, 6).map((s, i) => (
             <TextStoryRow key={s.id} story={s} index={i + 4} light />
           ))}
         </div>
