@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { ALL_ARTICLES, CATEGORY_SECTIONS } from "../data/news";
 import { Badge, SectionHead, ArticleCard } from "../components/UI";

@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { ALL_ARTICLES, LATEST, CATEGORY_SECTIONS } from "../data/news";
 

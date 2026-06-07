@@ -1,3 +1,4 @@
+import React from "react";
 import { BREAKING_ITEMS } from "../data/news";
 
 export default function BreakingTicker() {

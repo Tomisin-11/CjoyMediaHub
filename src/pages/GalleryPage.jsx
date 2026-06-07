@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { GALLERY_ITEMS } from "../data/news";
 import { SectionHead } from "../components/UI";
