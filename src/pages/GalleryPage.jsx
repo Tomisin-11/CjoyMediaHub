@@ -18,25 +18,6 @@ export default function GalleryPage() {
 
   return (
     <main className="max-w-screen-xl mx-auto px-4 py-6">
-      {/* Header */}
-      <div className="relative mb-8 overflow-hidden h-44">
-        <img
-          src="https://picsum.photos/seed/gallerybanner/1200/400"
-          alt="Gallery"
-          className="w-full h-full object-cover"
-          onError={(e) => { e.target.onerror = null; e.target.src = "https://picsum.photos/seed/galback/1200/400"; }}
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-65 flex items-end p-6">
-          <div>
-            <span className="text-xs font-black uppercase tracking-widest text-red-400 block mb-1">Media</span>
-            <h1 className="text-4xl font-black text-white uppercase tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }}>
-              Photo & Video Gallery
-            </h1>
-            <p className="text-zinc-300 text-sm mt-1">{GALLERY_ITEMS.length} items</p>
-          </div>
-        </div>
-      </div>
-
       {/* Filters */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex gap-2">

@@ -14,7 +14,16 @@ const CAT_IMAGES = {
   fashion:      "https://picsum.photos/seed/fsh001/1200/400",
 };
 
-const FALLBACK = (i) => `https://picsum.photos/seed/art${i}/800/500`;
+const FALLBACKS = [
+  "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&h=500&fit=crop",
+];
+
+const FALLBACK = (i) => FALLBACKS[Math.abs(i) % FALLBACKS.length];
 
 const handleImgError = (e, i) => {
   e.target.onerror = null;

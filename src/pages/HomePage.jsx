@@ -1,13 +1,25 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { HERO, SIDEBAR_STORIES, LATEST, MORE_ROWS, CATEGORY_SECTIONS, GALLERY_ITEMS } from "../data/news";
 
+const FALLBACKS = [
+  "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=500&fit=crop",
+  "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=800&h=500&fit=crop",
+];
+
 const getImg = (story, i) => {
-  return story?.image || `https://picsum.photos/seed/home${i}/800/500`;
+  return story?.image || FALLBACKS[Math.abs(i) % FALLBACKS.length];
 };
 
 const onErr = (e, i) => {
   e.target.onerror = null;
-  e.target.src = `https://picsum.photos/seed/fb${i}/800/500`;
+  e.target.src = FALLBACKS[Math.abs(i) % FALLBACKS.length];
 };
 
 const f = { fontFamily: "'Libre Franklin', Arial, sans-serif" };
@@ -95,19 +107,26 @@ function FeaturedCard({ story, index, large = false, light = false, overlay = fa
 
 function StoryRow({ story, index, light = false }) {
   return (
-    <Link to={`/article/${story.slug}`} className={`flex items-start gap-3 py-3 border-b group last:border-0 ${light ? "border-zinc-700" : "border-gray-100"}`}>
+    <Link to={`/article/${story.slug}`} className={`flex items-start gap-3 py-4 border-b group last:border-0 ${light ? "border-zinc-700" : "border-gray-200"}`}>
       <img
         src={getImg(story, index)}
         alt={story.title}
-        className="w-16 h-12 object-cover object-center shrink-0"
+        className="w-28 h-20 object-cover object-center shrink-0"
         loading="lazy"
         onError={(e) => onErr(e, index)}
       />
       <div className="flex-1 min-w-0">
-        <h4 className={`text-sm font-bold leading-snug group-hover:underline line-clamp-3 ${light ? "text-white" : "text-gray-900"}`} style={f}>
+        <h4 className={`text-sm font-bold leading-snug group-hover:underline line-clamp-3 mb-2 ${light ? "text-white" : "text-gray-900"}`} style={f}>
           {story.title}
         </h4>
-        <Meta time={story.time} tag={getTag(index)} light={light} />
+        <p className={`text-xs ${light ? "text-zinc-400" : "text-gray-400"}`} style={f}>
+          {story.time}
+          {story.category && (
+            <span className="ml-2 pl-2 border-l border-gray-300 font-semibold uppercase tracking-wide text-[10px]">
+              {story.category}
+            </span>
+          )}
+        </p>
       </div>
     </Link>
   );
@@ -138,43 +157,71 @@ function TextStoryRow({ story, index, light = false, numbered = false }) {
 
 // ── HERO ──────────────────────────────────────────────────────────────────────
 function HeroSection() {
-  const left = SIDEBAR_STORIES.slice(0, 2);
-  const right = SIDEBAR_STORIES.slice(2, 6);
+  const left = SIDEBAR_STORIES.slice(1, 3);
+  const right = SIDEBAR_STORIES.slice(1, 6);
 
   return (
     <section>
       {/* Desktop */}
-      <div className="hidden lg:grid lg:grid-cols-[1fr_1.7fr_1fr] lg:gap-0 border border-gray-200">
-        <div className="flex flex-col divide-y divide-gray-200 border-r">
+      <div className="hidden lg:flex lg:gap-0 border border-gray-200" style={{ height: "480px" }}>
+
+        {/* Left — 3 stories */}
+        <div className="flex flex-col divide-y divide-gray-200 border-r w-[22%] shrink-0 overflow-hidden">
           {left.map((s, i) => (
-            <Link key={s.id} to={`/article/${s.slug}`} className="group p-4 hover:bg-gray-50 transition-colors flex-1">
+            <Link key={s.id} to={`/article/${s.slug}`} className="group p-3 hover:bg-gray-50 transition-colors flex-1 flex flex-col overflow-hidden">
               <img
                 src={getImg(s, i)}
                 alt={s.title}
-                className="w-full h-36 object-cover object-center mb-2"
+                className="w-full h-20 object-cover object-center mb-2 shrink-0"
                 loading="lazy"
                 onError={(e) => onErr(e, i)}
               />
-              <h4 className="text-sm font-bold leading-snug text-gray-900 group-hover:underline line-clamp-3" style={f}>
+              <h4 className="text-xs font-bold leading-snug text-gray-900 group-hover:underline line-clamp-2 mb-1" style={f}>
                 {s.title}
               </h4>
+              {s.excerpt && (
+                <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 flex-1" style={f}>
+                  {s.excerpt}
+                </p>
+              )}
               <Meta time={s.time} tag={getTag(i)} />
             </Link>
           ))}
         </div>
 
-        <div className="border-r border-gray-200">
-          <FeaturedCard story={HERO} index={0} large />
+        {/* Center — fixed height, text bottom-left */}
+        <div className="border-r border-gray-200 flex-1 relative overflow-hidden">
+          <Link to={`/article/${HERO.slug}`} className="group block absolute inset-0">
+            <img
+              src={getImg(HERO, 0)}
+              alt={HERO.title}
+              className="w-full h-full object-cover object-center"
+              onError={(e) => onErr(e, 0)}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-5">
+              <h2 className="text-2xl xl:text-3xl font-black leading-tight text-white group-hover:underline" style={f}>
+                {HERO.title}
+              </h2>
+              {HERO.excerpt && (
+                <p className="text-sm text-zinc-200 mt-2 leading-relaxed" style={f}>
+                  {HERO.excerpt}
+                </p>
+              )}
+              <Meta time={HERO.time} tag={getTag(0)} light />
+            </div>
+          </Link>
         </div>
 
-        <div className="flex flex-col divide-y divide-gray-200">
+        {/* Right — 4 stories, no images */}
+        <div className="flex flex-col divide-y divide-gray-200 w-[22%] shrink-0 overflow-hidden">
           {right.map((s, i) => (
-            <Link key={s.id} to={`/article/${s.slug}`} className="group p-4 hover:bg-gray-50 transition-colors flex-1">
-              <h4 className="text-sm font-bold leading-snug text-gray-900 group-hover:underline line-clamp-4" style={f}>
+            <Link key={s.id} to={`/article/${s.slug}`} className="group p-3 hover:bg-gray-50 transition-colors flex-1 flex flex-col overflow-hidden">
+              <h4 className="text-xs font-bold leading-snug text-gray-900 group-hover:underline line-clamp-4 flex-1" style={f}>
                 {s.title}
               </h4>
               {s.excerpt && <p className="text-xs text-gray-500 mt-1 line-clamp-2" style={f}>{s.excerpt}</p>}
-              <Meta time={s.time} tag={getTag(i + 2)} />
+              <Meta time={s.time} tag={getTag(i + 3)} />
             </Link>
           ))}
         </div>
@@ -186,7 +233,7 @@ function HeroSection() {
           <img
             src={getImg(HERO, 0)}
             alt={HERO.title}
-            className="w-full h-64 object-cover object-center"
+            className="w-full h-56 object-cover object-center"
             onError={(e) => onErr(e, 0)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
@@ -196,7 +243,7 @@ function HeroSection() {
           </div>
         </Link>
         <div className="px-4 sm:px-6 divide-y divide-gray-100">
-          {SIDEBAR_STORIES.map((s, i) => (
+          {SIDEBAR_STORIES.slice(0, 4).map((s, i) => (
             <StoryRow key={s.id} story={s} index={i + 1} />
           ))}
         </div>
@@ -205,31 +252,21 @@ function HeroSection() {
   );
 }
 
-// ── LATEST ────────────────────────────────────────────────────────────────────
+// ── LATEST — 4 cards only ─────────────────────────────────────────────────────
 function LatestSection({ stories }) {
   const top4 = stories.slice(0, 4);
-  const next8 = stories.slice(4, 12);
 
   return (
     <section>
       <SectionTitle title="Latest Stories" to="/politics" accent />
-      {/* Top 4 cards */}
-      <div className="hidden lg:grid lg:grid-cols-4 lg:gap-3 mb-6">
+      <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4">
         {top4.map((s, i) => (
           <FeaturedCard key={s.id} story={s} index={i} overlay />
         ))}
       </div>
-      {/* Next 8 as horizontal rows */}
-      {next8.length > 0 && (
-        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-x-8">
-          {next8.map((s, i) => (
-            <StoryRow key={s.id} story={s} index={i + 4} />
-          ))}
-        </div>
-      )}
       {/* Mobile */}
       <div className="lg:hidden divide-y divide-gray-100">
-        {stories.slice(0, 8).map((s, i) => (
+        {top4.map((s, i) => (
           <StoryRow key={s.id} story={s} index={i} />
         ))}
       </div>
@@ -237,40 +274,21 @@ function LatestSection({ stories }) {
   );
 }
 
-// ── MY NEWS ───────────────────────────────────────────────────────────────────
+// ── EDITOR'S PICKS ────────────────────────────────────────────────────────────
 function MyNewsSection({ stories = [] }) {
-  const items = stories.length ? stories : LATEST.slice(4, 12);
+  const items = stories.length ? stories : LATEST.slice(4, 8);
 
   return (
     <section style={{ backgroundColor: "#0a0a0a" }} className="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-10">
       <div className="max-w-screen-xl mx-auto">
         <SectionTitle title="Editor's Picks" to="/entertainment" light />
-        <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4 mb-6">
+        <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4">
           {items.slice(0, 4).map((s, i) => (
             <FeaturedCard key={s.id} story={s} index={i + 4} light overlay />
           ))}
         </div>
-        {items.slice(4, 8).length > 0 && (
-          <div className="hidden lg:grid lg:grid-cols-4 lg:gap-4">
-            {items.slice(4, 8).map((s, i) => (
-              <Link key={s.id} to={`/article/${s.slug}`} className="group flex gap-3 items-start py-3 border-t border-zinc-800">
-                <img
-                  src={getImg(s, i + 8)}
-                  alt={s.title}
-                  className="w-16 h-12 object-cover object-center shrink-0"
-                  loading="lazy"
-                  onError={(e) => onErr(e, i + 8)}
-                />
-                <div className="flex-1 min-w-0">
-                  <h5 className="text-xs font-bold leading-snug text-white group-hover:underline line-clamp-3" style={f}>{s.title}</h5>
-                  <Meta time={s.time} light />
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
         <div className="lg:hidden divide-y divide-zinc-800">
-          {items.slice(0, 6).map((s, i) => (
+          {items.slice(0, 4).map((s, i) => (
             <TextStoryRow key={s.id} story={s} index={i + 4} light />
           ))}
         </div>
