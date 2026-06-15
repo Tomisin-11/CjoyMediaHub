@@ -233,12 +233,16 @@ function HeroSection() {
           <img
             src={getImg(HERO, 0)}
             alt={HERO.title}
-            className="w-full h-56 object-cover object-center"
+            className="w-full h-[420px] sm:h-[500px] object-cover object-center"
             onError={(e) => onErr(e, 0)}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
-            <h2 className="text-xl font-black leading-snug text-white group-hover:underline" style={serif}>{HERO.title}</h2>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 px-4 pb-6">
+            <span className="inline-block text-[10px] font-black uppercase tracking-widest bg-red-600 text-white px-2 py-0.5 mb-2">{HERO.category}</span>
+            <h2 className="text-2xl font-black leading-snug text-white group-hover:underline" style={serif}>{HERO.title}</h2>
+            {HERO.excerpt && (
+              <p className="text-sm text-zinc-300 mt-2 leading-relaxed line-clamp-2" style={f}>{HERO.excerpt}</p>
+            )}
             <Meta time={HERO.time} tag={getTag(0)} light />
           </div>
         </Link>
@@ -396,40 +400,81 @@ function CategorySection({ section, layoutIndex }) {
 }
 
 // ── GALLERY ───────────────────────────────────────────────────────────────────
+function GalleryThumb({ g, i, className = "" }) {
+  return (
+    <Link to="/gallery" className={`group relative block overflow-hidden ${className}`}>
+      <img
+        src={getImg(g, i)}
+        alt=""
+        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-400"
+        loading="lazy"
+        onError={(e) => onErr(e, i + 50)}
+      />
+      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300" />
+    </Link>
+  );
+}
+
 function GalleryStrip() {
+  const imgs = GALLERY_ITEMS.slice(0, 13);
+
   return (
     <section>
-      <SectionTitle title="Photo & Video Gallery" to="/gallery" accent />
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-        {GALLERY_ITEMS.slice(0, 16).map((g, i) => (
-          <Link
-            key={g.id}
-            to="/gallery"
-            className={`group relative block overflow-hidden ${i === 0 || i === 8 ? "col-span-2 row-span-2" : ""}`}
-          >
-            <img
-              src={getImg(g, i)}
-              alt={g.caption}
-              className={`w-full object-cover object-center group-hover:scale-105 transition-transform duration-300 ${
-                i === 0 || i === 8 ? "h-44 sm:h-52" : "h-24 sm:h-28"
-              }`}
-              loading="lazy"
-              onError={(e) => onErr(e, i + 50)}
-            />
-            {g.type === "video" && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-black/70 w-8 h-8 flex items-center justify-center">
-                  <svg width="8" height="10" fill="white" viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z" /></svg>
-                </div>
-              </div>
-            )}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
-          </Link>
-        ))}
+      <SectionTitle title="Photo Gallery" to="/gallery" accent />
+
+      {/* ── Desktop layout ── */}
+      <div className="hidden lg:block space-y-2">
+
+        {/* Row 1: 1 big + 3 medium */}
+        <div className="grid grid-cols-4 gap-2" style={{ height: 320 }}>
+          <GalleryThumb g={imgs[0]} i={0} className="col-span-2" />
+          <GalleryThumb g={imgs[1]} i={1} />
+          <GalleryThumb g={imgs[2]} i={2} />
+        </div>
+
+        {/* Row 2: 4 equal */}
+        <div className="grid grid-cols-4 gap-2" style={{ height: 200 }}>
+          {imgs.slice(3, 7).map((g, i) => (
+            <GalleryThumb key={g.id} g={g} i={i + 3} />
+          ))}
+        </div>
+
+        {/* Row 3: 3 medium + 1 big */}
+        <div className="grid grid-cols-4 gap-2" style={{ height: 240 }}>
+          <GalleryThumb g={imgs[7]} i={7} />
+          <GalleryThumb g={imgs[8]} i={8} />
+          <GalleryThumb g={imgs[9]} i={9} />
+          <GalleryThumb g={imgs[10]} i={10} className="col-span-1" />
+        </div>
       </div>
-      <div className="text-center mt-4">
-        <Link to="/gallery" className="inline-block border border-zinc-900 text-zinc-900 text-xs font-black uppercase tracking-widest px-8 py-3 hover:bg-zinc-900 hover:text-white transition-colors">
-          View Full Gallery
+
+      {/* ── Mobile layout ── */}
+      <div className="lg:hidden space-y-2">
+
+        {/* Big hero */}
+        <GalleryThumb g={imgs[0]} i={0} className="block h-56 w-full" />
+
+        {/* 2-col grid */}
+        <div className="grid grid-cols-2 gap-2">
+          {imgs.slice(1, 7).map((g, i) => (
+            <GalleryThumb key={g.id} g={g} i={i + 1} className="h-36" />
+          ))}
+        </div>
+
+        {/* 3-col strip */}
+        <div className="grid grid-cols-3 gap-2">
+          {imgs.slice(7, 13).map((g, i) => (
+            <GalleryThumb key={g.id} g={g} i={i + 7} className="h-28" />
+          ))}
+        </div>
+      </div>
+
+      <div className="text-center mt-5">
+        <Link
+          to="/gallery"
+          className="inline-block border border-zinc-900 text-zinc-900 text-xs font-black uppercase tracking-widest px-8 py-3 hover:bg-zinc-900 hover:text-white transition-colors"
+        >
+          View Full Gallery ({GALLERY_ITEMS.length} photos)
         </Link>
       </div>
     </section>

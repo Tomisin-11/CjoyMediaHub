@@ -85,10 +85,37 @@ export const Footer = () => (
           <p className="text-xs text-zinc-500 mt-3 leading-relaxed">
             Nigeria's most trusted digital news platform — breaking stories, in-depth analysis and live coverage from across the country and the world.
           </p>
-          <div className="flex gap-3 mt-4">
-            {["Twitter", "Facebook", "Instagram", "YouTube"].map((s) => (
-              <a key={s} href="#" className="text-[10px] font-bold text-zinc-500 hover:text-white uppercase tracking-wide transition-colors">{s}</a>
-            ))}
+          <div className="flex gap-1 mt-4">
+            {/* Instagram */}
+            <a href="https://www.instagram.com/yotomi_media/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+              className="flex items-center justify-center w-10 h-10 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+            </a>
+            {/* Facebook */}
+            <a href="https://www.facebook.com/ajayi.michael.315/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"
+              className="flex items-center justify-center w-10 h-10 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z" />
+              </svg>
+            </a>
+            {/* TikTok */}
+            <a href="https://www.tiktok.com/@yotomi_media" target="_blank" rel="noopener noreferrer" aria-label="TikTok"
+              className="flex items-center justify-center w-10 h-10 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16.6 5.8a4.3 4.3 0 0 1-3-1.3V14a4.7 4.7 0 1 1-4-4.6v2.1a2.6 2.6 0 1 0 1.9 2.5V2h2.1a4.3 4.3 0 0 0 3 3.7v0.1z" />
+              </svg>
+            </a>
+            {/* X / Twitter */}
+            <a href="https://x.com/AjayiMichael1" target="_blank" rel="noopener noreferrer" aria-label="X"
+              className="flex items-center justify-center w-10 h-10 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-colors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.9 3H22l-7 8 7.6 10h-6l-4.7-6.2L6.3 21H3.2l7.5-8.6L3 3h6.1l4.3 5.7L18.9 3z" />
+              </svg>
+            </a>
           </div>
         </div>
 
